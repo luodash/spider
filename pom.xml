@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.luodash.spider</groupId>
+    <artifactId>spider</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <developers>
+        <developer>
+            <name>DASH</name>
+            <email>luodx04551@163.com</email>
+        </developer>
+    </developers>
+    <modules>
+        <module>spider-parent</module>
+    </modules>
+
+    <description>
+        蜘蛛之神需要祭品。
+        The spider demands sacrifice.
+    </description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <maven-source-plugin>2.4</maven-source-plugin>
+        <maven-javadoc-plugin>2.10.4</maven-javadoc-plugin>
+        <maven-gpg-plugin>1.6</maven-gpg-plugin>
+
+        <scm.trunk.url>https://github.com/luodash/spider.git</scm.trunk.url>
+    </properties>
+
+    <!--定义snapshots库和releases库的nexus地址-->
+    <!--项目分发信息，在执行mvn deploy后表示要发布的位置。有了这些信息就可以把网站部署到远程服务器或者把构件部署到远程仓库。-->
+    <distributionManagement>
+        <!--构件的快照部署到哪里？如果没有配置该元素，默认部署到repository元素配置的仓库，参见distributionManagement/repository元素-->
+        <snapshotRepository>
+            <!--oss需要对应到settings.xml下的service的id-->
+            <id>oss</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <!--部署项目产生的构件到远程仓库需要的信息-->
+        <repository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <!--SCM(Source Control Management)标签允许你配置你的代码库，供Maven web站点和其它插件使用。-->
+    <scm>
+        <!--SCM的URL,该URL描述了版本库和如何连接到版本库。欲知详情，请看SCMs提供的URL格式和列表。该连接只读。-->
+        <connection>scm:git:${scm.trunk.url}</connection>
+        <!--给开发者使用的，类似connection元素。即该连接不仅仅只读-->
+        <developerConnection>scm:git:${scm.trunk.url}</developerConnection>
+        <!--指向项目的可浏览SCM库（例如ViewVC或者Fisheye）的URL。-->
+        <url>scm:git:${scm.trunk.url}</url>
+        <!--当前代码的标签，在开发阶段默认为HEAD-->
+        <tag>HEAD</tag>
+    </scm>
+
+    <profiles>
+        <profile>
+            <id>gpg</id>
+            <properties>
+                <gpg.executable>gpg</gpg.executable>
+                <gpg.passphrase>ldx04551.</gpg.passphrase>
+            </properties>
+        </profile>
+        <!--<profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <jdk>[1.8,)</jdk>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>-->
+        <profile>
+            <!--打包环境-->
+            <id>release</id>
+            <properties>
+                <profiles.active>release</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin}</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin}</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!--<profile>
+            <id>beta</id>
+            <properties>
+                <profiles.active>beta</profiles.active>
+            </properties>
+        </profile>-->
+    </profiles>
+
+
+
+
+</project>
